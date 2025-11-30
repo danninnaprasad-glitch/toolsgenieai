@@ -40,20 +40,22 @@ const App: React.FC = () => {
           <SEO />
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Layout><Home /></Layout>} />
-              <Route path="/tools" element={<Layout><ToolsHub /></Layout>} />
-              <Route path="/tool/:id" element={<Layout><ToolRunner /></Layout>} />
-              <Route path="/blog" element={<Layout><BlogHub /></Layout>} />
-              <Route path="/blog/:id" element={<Layout><BlogPost /></Layout>} />
-              <Route path="/essentials" element={<Layout><Essentials /></Layout>} />
-              <Route path="/contact" element={<Layout><Contact /></Layout>} />
-              <Route path="/faq" element={<Layout><Faq /></Layout>} />
-              <Route path="/privacy" element={<Layout><Legal /></Layout>} />
-              <Route path="/terms" element={<Layout><Legal /></Layout>} />
-              <Route path="/disclaimer" element={<Layout><Legal /></Layout>} />
+              {/* Public Routes Wrapped in Layout */}
+              <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/tools" element={<ToolsHub />} />
+                <Route path="/tool/:id" element={<ToolRunner />} />
+                <Route path="/blog" element={<BlogHub />} />
+                <Route path="/blog/:id" element={<BlogPost />} />
+                <Route path="/essentials" element={<Essentials />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/faq" element={<Faq />} />
+                <Route path="/privacy" element={<Legal />} />
+                <Route path="/terms" element={<Legal />} />
+                <Route path="/disclaimer" element={<Legal />} />
+              </Route>
 
-              {/* Admin Routes */}
+              {/* Admin Routes - Standalone Layout */}
               <Route path="/admin" element={<Login />} />
               <Route path="/admin/dashboard" element={<AdminLayout />}>
                 <Route index element={<Dashboard />} />

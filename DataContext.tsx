@@ -74,7 +74,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     if (!settings) return;
 
-    // Google Verification
+    // 1. Google Verification (Console)
     if (settings.googleConsoleId) {
       let meta = document.querySelector('meta[name="google-site-verification"]');
       if (!meta) {
@@ -83,6 +83,20 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         document.head.appendChild(meta);
       }
       meta.setAttribute('content', settings.googleConsoleId);
+    }
+
+    // 2. Google AdSense Script Injection
+    if (settings.googleAdSenseId) {
+      const scriptId = 'google-adsense-script';
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement('script');
+        script.id = scriptId;
+        script.async = true;
+        // Use the proper AdSense URL format
+        script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${settings.googleAdSenseId}`;
+        script.crossOrigin = "anonymous";
+        document.head.appendChild(script);
+      }
     }
   }, [settings]);
 

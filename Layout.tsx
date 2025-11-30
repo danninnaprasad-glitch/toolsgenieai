@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, Home, Cpu, ShoppingBag, HelpCircle, Mail, Zap, BookOpen, Twitter, Facebook, Linkedin, Github, Moon, Sun } from 'lucide-react';
+import { NavLink, useLocation, Link, Outlet } from 'react-router-dom';
+import { Menu, X, Home, Cpu, ShoppingBag, HelpCircle, Mail, Zap, BookOpen, Twitter, Facebook, Linkedin, Github, Moon, Sun, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useData } from '../contexts/DataContext';
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Layout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const [showCookie, setShowCookie] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const { settings } = useData();
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -49,7 +51,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-darker text-slate-900 dark:text-slate-200 flex flex-col transition-colors duration-300">
+    <div className="min-h-screen bg-darker text-slate-900 dark:text-slate-200 flex flex-col transition-colors duration-300 font-sans">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 dark:bg-darker/80 backdrop-blur-md border-b border-slate-200 dark:border-white/10">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -135,9 +137,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         )}
       </AnimatePresence>
 
-      {/* Main Content */}
+      {/* Main Content Rendered Here via Outlet */}
       <main className="flex-grow container mx-auto px-4 py-8">
-        {children}
+        <Outlet />
       </main>
 
       {/* Footer */}
@@ -150,10 +152,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 Your premier destination for AI-powered utilities, SEO tools, and developer resources. Built for the modern web.
               </p>
               <div className="flex gap-4">
-                <a href="#" className="text-slate-500 hover:text-indigo-500 dark:hover:text-indigo-400"><Twitter size={18}/></a>
-                <a href="#" className="text-slate-500 hover:text-indigo-500 dark:hover:text-blue-500"><Facebook size={18}/></a>
-                <a href="#" className="text-slate-500 hover:text-indigo-500 dark:hover:text-blue-400"><Linkedin size={18}/></a>
-                <a href="#" className="text-slate-500 hover:text-indigo-500 dark:hover:text-white"><Github size={18}/></a>
+                {settings.socials.twitter && <a href={settings.socials.twitter} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-indigo-500 dark:hover:text-indigo-400"><Twitter size={18}/></a>}
+                {settings.socials.facebook && <a href={settings.socials.facebook} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-indigo-500 dark:hover:text-blue-500"><Facebook size={18}/></a>}
+                {settings.socials.linkedin && <a href={settings.socials.linkedin} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-indigo-500 dark:hover:text-blue-400"><Linkedin size={18}/></a>}
+                {settings.socials.github && <a href={settings.socials.github} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-indigo-500 dark:hover:text-white"><Github size={18}/></a>}
               </div>
             </div>
             <div>
@@ -178,11 +180,19 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 <li><NavLink to="/privacy" className="hover:text-indigo-600 dark:hover:text-white">Privacy Policy</NavLink></li>
                 <li><NavLink to="/terms" className="hover:text-indigo-600 dark:hover:text-white">Terms of Service</NavLink></li>
                 <li><NavLink to="/disclaimer" className="hover:text-indigo-600 dark:hover:text-white">Disclaimer</NavLink></li>
+                <li>
+                  <NavLink to="/admin" className="hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-1 mt-2 font-medium">
+                     Admin Panel
+                  </NavLink>
+                </li>
               </ul>
             </div>
           </div>
           <div className="border-t border-slate-200 dark:border-white/5 pt-6 text-center text-slate-600 dark:text-slate-600 text-sm flex items-center justify-center gap-2">
             <span>© {new Date().getFullYear()} Tools Genie AI. All Rights Reserved.</span>
+            <Link to="/admin" className="text-slate-400 hover:text-indigo-500 transition-colors p-1" title="Admin Login">
+               <Lock size={14} />
+            </Link>
           </div>
         </div>
       </footer>
