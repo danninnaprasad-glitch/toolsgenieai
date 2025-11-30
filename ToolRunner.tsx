@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowLeft, Copy, Check, AlertCircle } from 'lucide-react';
 import { ALL_TOOLS } from '../constants';
 import { Button } from '../components/Button';
 import { generateAIContent } from '../services/geminiService';
+import SEO from '../components/SEO';
+import AdUnit from '../components/AdUnit';
 
 const ToolRunner: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -39,6 +40,18 @@ const ToolRunner: React.FC = () => {
     setIsLoading(true);
     setOutput('');
     
+    // Validation Logic
+    if (tool.id === 'ai-summarizer') {
+      const textVal = inputs['text'] || '';
+      const wordCount = textVal.trim().split(/\s+/).filter((w: string) => w.length > 0).length;
+      
+      if (wordCount > 5000) {
+        setOutput(`⚠️ Limit Exceeded: Your input contains ${wordCount} words.\n\nThe AI Smart Summarizer has a maximum limit of 5000 words per request to ensure optimal performance. Please reduce your text length and try again.`);
+        setIsLoading(false);
+        return;
+      }
+    }
+
     // Simulate delay for feel
     await new Promise(r => setTimeout(r, 600));
 
@@ -94,8 +107,26 @@ const ToolRunner: React.FC = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const toolSchema = {
+    "@type": "SoftwareApplication",
+    "name": tool.name,
+    "applicationCategory": tool.category,
+    "operatingSystem": "Web",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
+      <SEO 
+        title={`${tool.name} - Free Online Tool`} 
+        description={tool.description}
+        type="application"
+        schema={toolSchema}
+      />
       <Link to="/tools" className="inline-flex items-center text-slate-400 hover:text-white mb-6">
         <ArrowLeft size={18} className="mr-2" /> Back to Tools
       </Link>
@@ -188,6 +219,9 @@ const ToolRunner: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      {/* Result Ad */}
+      <AdUnit slot="result-ad" className="mt-8" />
     </div>
   );
 };

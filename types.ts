@@ -68,5 +68,5 @@ export interface SiteSettings {
     facebook: string;
     linkedin: string;
     github: string;
-  }
+  };
 }
