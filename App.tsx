@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
+import MainLayout from './components/MainLayout';
 import { AuthProvider } from './contexts/AuthContext';
 import { DataProvider } from './contexts/DataContext';
 import SEO from './components/SEO';
@@ -40,8 +40,8 @@ const App: React.FC = () => {
           <SEO />
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
-              {/* Public Routes Wrapped in Layout */}
-              <Route element={<Layout />}>
+              {/* Public Routes Wrapped in MainLayout */}
+              <Route element={<MainLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/tools" element={<ToolsHub />} />
                 <Route path="/tool/:id" element={<ToolRunner />} />
